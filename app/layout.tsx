@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
 import HeaderNavigation from './components/HeaderNavigation';
+import { Toaster } from '@/components/ui/sonner';
 
 const suit = localFont({
     src: './fonts/SUIT-Variable.woff2',
@@ -24,6 +25,7 @@ export default function RootLayout({
             <body className={`${suit.variable} antialiased`}>
                 <HeaderNavigation />
                 <main>{children}</main>
+                <Toaster />
             </body>
         </html>
     );
