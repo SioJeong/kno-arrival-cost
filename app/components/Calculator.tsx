@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
     Select,
@@ -21,10 +20,10 @@ import { Calculator } from 'lucide-react';
 
 export default function CalculatorApp({ currency, rate }: { currency: string; rate: number }) {
     const [sku, setSku] = useState<string | null>(null);
-    const [conditionType, setConditionType] = useState('cost'); // 'cost' or 'retail'
+    const [conditionType, setConditionType] = useState('costPlus'); // 'costPlus' or 'retailMinus' or 'costMinus' or 'retailPlus
     const [cost, setCost] = useState<number | null>(null);
     const [condition, setCondition] = useState<number | null>(null);
-    const [duties, setDuties] = useState(false);
+    const [duties, setDuties] = useState<string>('dutyFree'); // 'dutyFree' or 'notDutyFree'
     const [category, setCategory] = useState<string | null>(null);
     const [result, setResult] = useState<number | null>(null);
 
@@ -34,6 +33,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
         acc: 1.04,
         belt: 1.04,
         rtw: 1.05,
+        largeAcc: 1.05,
         jacket: 1.06,
         shoes: 1.07,
     };
@@ -41,24 +41,36 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
     const handleCalculate = () => {
         if (!isReady) return;
 
-        let calculatedResult;
+        let calculatedResult = 0;
         const shippingCost = SHIPPING_COST[category] || 1.07;
-        const dutiesMultiplier = duties ? (category === 'acc' ? 1.08 : 1.13) : 1;
+        const dutiesMultiplier =
+            duties === 'notDutyFree'
+                ? category === 'acc' || category === 'largeAcc'
+                    ? 1.08
+                    : 1.13
+                : 1;
+        const conditionMultiplier = condition / 100;
 
-        if (conditionType === 'cost') {
-            // Cost + Condition calculation
-            const conditionMultiplier = condition / 100;
-            calculatedResult =
-                cost * (1 + conditionMultiplier) * rate * 1.1 * shippingCost * dutiesMultiplier;
-        } else {
-            // Retail - Condition calculation
-            const conditionDeduction = condition / 100;
-            calculatedResult =
-                cost * (1 - conditionDeduction) * rate * 1.1 * shippingCost * dutiesMultiplier;
+        switch (conditionType) {
+            case 'costPlus':
+                calculatedResult =
+                    cost * (1 + conditionMultiplier) * rate * 1.1 * shippingCost * dutiesMultiplier;
+                break;
+            case 'retailMinus':
+                calculatedResult =
+                    cost * (1 - conditionMultiplier) * rate * 1.1 * shippingCost * dutiesMultiplier;
+                break;
+            case 'costMinus':
+                calculatedResult =
+                    cost * (1 - conditionMultiplier) * rate * 1.1 * shippingCost * dutiesMultiplier;
+                break;
+            case 'retailPlus':
+                calculatedResult =
+                    cost * (1 + conditionMultiplier) * rate * 1.1 * shippingCost * dutiesMultiplier;
+                break;
         }
 
         const roundedResult = Math.round(calculatedResult / 100) * 100;
-
         setResult(roundedResult);
     };
 
@@ -94,15 +106,26 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                             <RadioGroup
                                 value={conditionType}
                                 onValueChange={setConditionType}
-                                className="flex space-x-4"
+                                className="grid grid-cols-2 gap-4"
                             >
                                 <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="cost" id="cost-condition" />
-                                    <Label htmlFor="cost-condition">Cost Price ±</Label>
+                                    <RadioGroupItem value="costPlus" id="cost-plus-condition" />
+                                    <Label htmlFor="cost-plus-condition">Cost Price +</Label>
                                 </div>
                                 <div className="flex items-center space-x-2">
-                                    <RadioGroupItem value="retail" id="retail-condition" />
-                                    <Label htmlFor="retail-condition">Retail Price -</Label>
+                                    <RadioGroupItem
+                                        value="retailMinus"
+                                        id="retail-minus-condition"
+                                    />
+                                    <Label htmlFor="retail-minus-condition">Retail Price -</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="costMinus" id="cost-minus-condition" />
+                                    <Label htmlFor="cost-minus-condition">Cost Price -</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="retailPlus" id="retail-plus-condition" />
+                                    <Label htmlFor="retail-plus-condition">Retail Price +</Label>
                                 </div>
                             </RadioGroup>
                         </div>
@@ -117,8 +140,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                     <h4 className="font-semibold text-lg">컨디션 타입 설명</h4>
                                     <div className="p-4 py-2 bg-amber-200 rounded-md">
                                         <p className="text-sm mb-1">
-                                            <b>Cost ± Condition</b>: 원가에 컨디션 요율을 적용하여
-                                            납품가를 산정합니다.
+                                            <b>Cost Price +</b>: 원가에 컨디션을 더하여 납품가를
+                                            산정합니다.
                                         </p>
                                         <p className="text-sm">
                                             예를들어 Cost Price 100€에 Condition이 20%라면{' '}
@@ -127,12 +150,32 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                     </div>
                                     <div className="p-4 py-2 bg-amber-200 rounded-md">
                                         <p className="text-sm mb-1">
-                                            <b>Retail - Condition</b>: 소비자가에 컨디션 요율을
-                                            적용하여 납품가를 산정합니다.
+                                            <b>Retail Price -</b>: 소비자가에서 컨디션을 빼고
+                                            납품가를 산정합니다.
                                         </p>
                                         <p className="text-sm">
-                                            예를들어 Retail Price 100€에 Condition이 -20%라면{' '}
+                                            예를들어 Retail Price 100€에 Condition이 20%라면{' '}
                                             <b>80€</b>이 됩니다.
+                                        </p>
+                                    </div>
+                                    <div className="p-4 py-2 bg-amber-200 rounded-md">
+                                        <p className="text-sm mb-1">
+                                            <b>Cost Price -</b>: 원가에서 컨디션을 빼고 납품가를
+                                            산정합니다.
+                                        </p>
+                                        <p className="text-sm">
+                                            예를들어 Cost Price 100€에 Condition이 20%라면{' '}
+                                            <b>80€</b>이 됩니다.
+                                        </p>
+                                    </div>
+                                    <div className="p-4 py-2 bg-amber-200 rounded-md">
+                                        <p className="text-sm mb-1">
+                                            <b>Retail Price +</b>: 소비자가에 컨디션을 더하여
+                                            납품가를 산정합니다.
+                                        </p>
+                                        <p className="text-sm">
+                                            예를들어 Retail Price 100€에 Condition이 20%라면{' '}
+                                            <b>120€</b>이 됩니다.
                                         </p>
                                     </div>
                                 </div>
@@ -146,26 +189,37 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                 <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-1.5">
                         <Label htmlFor="cost">
-                            {conditionType === 'cost' ? 'Cost Price' : 'Retail Price'}{' '}
+                            {conditionType.startsWith('cost') ? 'Cost Price' : 'Retail Price'}{' '}
                             {`(${currency})`}
                         </Label>
                         <Input
                             type="number"
                             id="cost"
                             value={cost ?? ''}
-                            onChange={(e) => setCost(parseFloat(e.target.value))}
+                            onChange={(e) =>
+                                setCost(e.target.value ? parseFloat(e.target.value) : null)
+                            }
+                            min={0}
                             className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                     </div>
                     <div className="space-y-1.5">
                         <Label htmlFor="condition">
-                            Condition ({conditionType === 'cost' ? '±' : '-'}%)
+                            Condition{' '}
+                            {conditionType === 'costPlus' || conditionType === 'retailPlus'
+                                ? '(+'
+                                : '(-'}
+                            %{')'}
                         </Label>
                         <Input
                             type="number"
                             id="condition"
                             value={condition ?? ''}
-                            onChange={(e) => setCondition(parseFloat(e.target.value))}
+                            onChange={(e) =>
+                                setCondition(e.target.value ? parseFloat(e.target.value) : null)
+                            }
+                            min={0}
+                            max={100}
                             className="[appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                         />
                     </div>
@@ -176,60 +230,73 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                     <Label>Category</Label>
                     <Select onValueChange={(value) => setCategory(value)}>
                         <SelectTrigger>
-                            <SelectValue placeholder="Select a Category" />
+                            <SelectValue placeholder="카테고리를 선택해주세요" />
                         </SelectTrigger>
                         <SelectContent>
                             <SelectGroup>
-                                <SelectLabel>Category</SelectLabel>
-                                <SelectItem value="acc">Acc</SelectItem>
-                                <SelectItem value="belt">Belt</SelectItem>
-                                <SelectItem value="rtw">T-shirts/Pants</SelectItem>
-                                <SelectItem value="jacket">Jacket</SelectItem>
-                                <SelectItem value="shoes">Shoes</SelectItem>
+                                <SelectLabel>Category (배송요율)</SelectLabel>
+                                <SelectItem value="acc">Acc (4%)</SelectItem>
+                                <SelectItem value="belt">Belt (4%)</SelectItem>
+                                <SelectItem value="rtw">T-shirts/Pants (5%)</SelectItem>
+                                <SelectItem value="largeAcc">Bag/LLG (5%)</SelectItem>
+                                <SelectItem value="jacket">Jacket (6%)</SelectItem>
+                                <SelectItem value="shoes">Shoes (7%)</SelectItem>
                             </SelectGroup>
                         </SelectContent>
                     </Select>
                 </div>
 
                 {/* 관세 설정 */}
-                <div className="flex items-center justify-between bg-slate-50 p-3 rounded-lg space-y-1.5">
-                    <div className="flex items-center space-x-2">
-                        <Switch
-                            id="duties"
-                            checked={duties}
-                            onCheckedChange={(checked) => setDuties(checked)}
-                        />
-                        <Label htmlFor="duties">관세 유무</Label>
+                <div className="space-y-1.5">
+                    <Label>Customs Duty</Label>
+                    <div className="flex items-center justify-between bg-slate-50 p-3 rounded-lg">
+                        <div className="flex items-center space-x-4">
+                            <RadioGroup
+                                value={duties}
+                                onValueChange={setDuties}
+                                className="flex space-x-4"
+                            >
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="dutyFree" id="dutyFree" />
+                                    <Label htmlFor="dutyFree">관세 없음</Label>
+                                </div>
+                                <div className="flex items-center space-x-2">
+                                    <RadioGroupItem value="notDutyFree" id="notDutyFree" />
+                                    <Label htmlFor="notDutyFree">관세 있음</Label>
+                                </div>
+                            </RadioGroup>
+                        </div>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    관세 유무란?
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-140">
+                                <div className="space-y-2">
+                                    <h4 className="font-semibold text-lg">관세 적용</h4>
+                                    <div className="p-4 py-2 bg-amber-200 rounded-md">
+                                        <p className="text-sm">
+                                            FTA 적용 가능한 EU Origin 제품은 관세 혜택이 가능합니다.
+                                        </p>
+                                    </div>
+                                    <div className="p-4 py-2 bg-amber-200 rounded-md">
+                                        <p className="text-sm">
+                                            대부분의 명품은 EU Origin이므로 관세 없이 계산
+                                            가능합니다.
+                                        </p>
+                                    </div>
+                                    <div className="p-4 py-2 bg-amber-200 rounded-md">
+                                        <p className="text-sm">
+                                            FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함
+                                            <br />
+                                            계수 <b>1.25-1.4</b>가 추가로 적용되어 계산됩니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
                     </div>
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Button variant="outline" size="sm">
-                                관세 유무란?
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-140">
-                            <div className="space-y-2">
-                                <h4 className="font-semibold text-lg">관세 적용</h4>
-                                <div className="p-4 py-2 bg-amber-200 rounded-md">
-                                    <p className="text-sm">
-                                        FTA 적용 가능한 EU Origin 제품은 관세 혜택이 가능합니다.
-                                    </p>
-                                </div>
-                                <div className="p-4 py-2 bg-amber-200 rounded-md">
-                                    <p className="text-sm">
-                                        대부분의 명품은 EU Origin이므로 관세 없이 계산 가능합니다.
-                                    </p>
-                                </div>
-                                <div className="p-4 py-2 bg-amber-200 rounded-md">
-                                    <p className="text-sm">
-                                        FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함
-                                        <br />
-                                        계수 <b>1.25-1.4</b>가 추가로 적용되어 계산됩니다.
-                                    </p>
-                                </div>
-                            </div>
-                        </PopoverContent>
-                    </Popover>
                 </div>
             </div>
 
