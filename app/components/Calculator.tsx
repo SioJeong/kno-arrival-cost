@@ -17,6 +17,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Calculator } from 'lucide-react';
+import { useStore } from 'zustand';
+import useCalculatorResultStore from '../store/calculatorResultStore';
 
 export default function CalculatorApp({ currency, rate }: { currency: string; rate: number }) {
     const [sku, setSku] = useState<string | null>(null);
@@ -26,6 +28,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
     const [duties, setDuties] = useState<string>('dutyFree'); // 'dutyFree' or 'notDutyFree'
     const [category, setCategory] = useState<string | null>(null);
     const [result, setResult] = useState<number | null>(null);
+
+    const addResult = useStore(useCalculatorResultStore, (state) => state.addResult);
 
     const isReady = sku !== null && cost !== null && condition !== null && category !== null;
 
@@ -72,6 +76,37 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
         const roundedResult = Math.round(calculatedResult / 100) * 100;
         setResult(roundedResult);
+
+        const conditionTypeMapper: Record<string, string> = {
+            costPlus: 'C+',
+            costMinus: 'C-',
+            RetailPlus: 'R+',
+            RetailMinus: 'R-',
+        };
+
+        const categoryMapper: Record<string, string> = {
+            acc: 'Acc',
+            belt: 'Belt',
+            rtw: 'T-shirts/Pants',
+            largeAcc: 'Bag/LLG',
+            jacket: 'Jacket',
+            shoes: 'Shoes',
+        };
+
+        // Zustand 스토어에 결과 저장
+        const newResult = {
+            checked: false,
+            id: `${Date.now()}`,
+            sku: sku as string,
+            cost: `${currency} ${cost.toFixed(2)}`,
+            condition: `${conditionTypeMapper[conditionType]}${condition as number}%`,
+            category: `${categoryMapper[category as string]}`,
+            customDuty: duties === 'notDutyFree',
+            finalPrice: roundedResult as number,
+            memo: '',
+        };
+
+        addResult(newResult);
     };
 
     return (
@@ -306,7 +341,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                     className="w-full"
                     onClick={() => {
                         handleCalculate();
-                        toast('저장되었습니다! 아래에서 확인하세요.');
+                        toast.success('저장되었습니다! 계산 내역에서 확인하세요.');
                     }}
                     disabled={!isReady}
                 >
