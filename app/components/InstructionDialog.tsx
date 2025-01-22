@@ -24,7 +24,7 @@ const InstructionStep = ({
     </div>
 );
 
-export function InstructionsDialog() {
+export default function InstructionsDialog() {
     return (
         <DialogContent className="max-w-3xl">
             <DialogHeader>
