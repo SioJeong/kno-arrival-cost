@@ -22,9 +22,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="ko">
-            <body className={`${suit.variable} antialiased`}>
+            <body className={`${suit.variable} antialiased min-h-screen flex flex-col`}>
                 <Header />
-                <main>{children}</main>
+                <main className="flex-1 px-8">{children}</main>
                 <Toaster />
             </body>
         </html>
