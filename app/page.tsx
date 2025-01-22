@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { Dialog, DialogTrigger } from '@/components/ui/dialog';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Button } from '@/components/ui/button';
 
 import Calculator from './components/Calculator';
-import { Button } from '@/components/ui/button';
-import { InstructionsDialog } from './components/InstructionDialog';
+import InstructionsDialog from './components/InstructionDialog';
+import ResultTable from './components/ResultTable';
 
 export default function ExchangeCalculator() {
     const [exchangeRates, setExchangeRates] = useState<ExchangeRate[]>([]);
@@ -93,8 +94,9 @@ export default function ExchangeCalculator() {
     const dollarRate = exchangeRates.find((rate) => rate.cur_unit === 'USD');
 
     return (
-        <>
-            <Card className="w-[500px] p-4 py-2">
+        <div className="h-[calc(100vh-theme(spacing.32))] flex gap-4">
+            {/* 왼쪽 카드 */}
+            <Card className="w-104 p-4 py-2 flex-shrink-0">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -113,7 +115,7 @@ export default function ExchangeCalculator() {
                         </Dialog>
                     </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">
                     <Tabs defaultValue="euro" className="space-y-4">
                         <TabsList className="grid w-full grid-cols-2">
                             <TabsTrigger value="euro">유로 €</TabsTrigger>
@@ -146,6 +148,31 @@ export default function ExchangeCalculator() {
                     {error && <div style={{ color: 'red' }}>{error}</div>}
                 </CardContent>
             </Card>
-        </>
+
+            {/* 오른쪽 카드 */}
+            <Card className="flex-grow">
+                <CardHeader>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <CardTitle className="text-2xl">계산 내역</CardTitle>
+                            <CardDescription className="mt-1.5">
+                                국내 도착가 계산 내역을 검토해보세요.
+                            </CardDescription>
+                        </div>
+                        {/* <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                    사용법
+                                </Button>
+                            </DialogTrigger>
+                            <InstructionsDialog />
+                        </Dialog> */}
+                    </div>
+                </CardHeader>
+                <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">
+                    <ResultTable />
+                </CardContent>
+            </Card>
+        </div>
     );
 }
