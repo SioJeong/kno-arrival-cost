@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
-import HeaderNavigation from './components/HeaderNavigation';
+import Header from './components/Header';
 import { Toaster } from '@/components/ui/sonner';
 
 const suit = localFont({
@@ -23,7 +23,7 @@ export default function RootLayout({
     return (
         <html lang="ko">
             <body className={`${suit.variable} antialiased`}>
-                <HeaderNavigation />
+                <Header />
                 <main>{children}</main>
                 <Toaster />
             </body>
