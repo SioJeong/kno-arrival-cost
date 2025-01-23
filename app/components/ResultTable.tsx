@@ -11,10 +11,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/components/ui/table';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { SquarePen, Trash2, MessageCircleQuestion } from 'lucide-react';
+import { Star, SquarePen, Trash2, MessageCircleQuestion } from 'lucide-react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -42,15 +41,18 @@ export default function ResultTable() {
         <div className="h-full">
             <div className="overflow-auto h-full">
                 <Table>
-                    <TableCaption>국내 도착가를 계산한 목록입니다.</TableCaption>
+                    <TableCaption>
+                        시장가 검색 기능과 목록 좌측의 체크 기능을 활용하여, 바잉하실 상품을 손쉽게
+                        분류하세요!{' '}
+                    </TableCaption>
                     <TableHeader className="sticky top-0 bg-white z-10">
                         <TableRow>
-                            <TableHead className="w-12">{/* Check */}</TableHead>
-                            <TableHead className="w-44">SKU</TableHead>
+                            <TableHead className="w-12 text-center">Check</TableHead>
+                            <TableHead className="w-44 text-center">SKU</TableHead>
                             <TableHead className="w-24 text-center">Cost</TableHead>
                             <TableHead className="w-24 text-center">Condition</TableHead>
                             <TableHead className="w-32 text-center">Category</TableHead>
-                            <TableHead className="w-20 text-center">Duty</TableHead>
+                            <TableHead className="w-20 text-center">Customs</TableHead>
                             <TableHead className="w-32 text-center font-semibold">
                                 Final Price
                             </TableHead>
@@ -59,7 +61,7 @@ export default function ResultTable() {
                                 <HoverCard openDelay={0} closeDelay={0}>
                                     <HoverCardTrigger asChild>
                                         <div className="flex flex-row justify-center items-center gap-2">
-                                            최저가 검색
+                                            시장가 검색
                                             <MessageCircleQuestion size={20} color="black" />
                                         </div>
                                     </HoverCardTrigger>
@@ -88,15 +90,22 @@ export default function ResultTable() {
                         {results.map((result: CalculateResult) => (
                             <TableRow
                                 key={result.id}
-                                className={`${
-                                    result.checked ? 'bg-lime-200' : ''
-                                } hover:bg-lime-100`}
+                                className={`${result.checked ? 'bg-lime-300' : ''} hover:${
+                                    result.checked ? 'bg-lime-100' : 'bg-zinc-100'
+                                }`}
                             >
-                                <TableCell className="text-center">
-                                    <Checkbox
-                                        checked={!!result.checked}
-                                        onCheckedChange={() => toggleChecked(result.id)}
-                                    />
+                                <TableCell className="text-center p-0">
+                                    <div className="flex items-center justify-center h-full w-full">
+                                        <Star
+                                            onClick={() => toggleChecked(result.id)}
+                                            size={24}
+                                            className={`cursor-pointer transition-colors duration-200 ${
+                                                result.checked
+                                                    ? 'fill-yellow-500 text-yellow-500'
+                                                    : 'text-gray-400'
+                                            }`}
+                                        />
+                                    </div>
                                 </TableCell>
                                 <TableCell className="font-semibold">{result.sku}</TableCell>
                                 <TableCell className="text-center">{result.cost}</TableCell>
@@ -139,23 +148,27 @@ export default function ResultTable() {
                                         </PopoverContent>
                                     </Popover>
                                 </TableCell>
-                                <TableCell className="space-x-2 text-center">
-                                    <Button size="sm" className="w-14">
-                                        <Link
-                                            href={`https://kream.co.kr/search?keyword=${result.sku}`}
-                                            target="_blank"
-                                        >
-                                            Kream
-                                        </Link>
-                                    </Button>
-                                    <Button size="sm" className="w-14">
-                                        <Link
-                                            href={`https://www.balaan.co.kr/products?keyword=${result.sku}&page=1&sort=lowPrice&lowest=Y`}
-                                            target="_blank"
-                                        >
-                                            발란
-                                        </Link>
-                                    </Button>
+                                <TableCell className="p-2">
+                                    <div className="flex flex-wrap justify-center gap-2 w-full">
+                                        <Button size="sm" className="w-full sm:w-14">
+                                            <Link
+                                                href={`https://kream.co.kr/search?keyword=${result.sku}`}
+                                                target="_blank"
+                                                className="w-full"
+                                            >
+                                                Kream
+                                            </Link>
+                                        </Button>
+                                        <Button size="sm" className="w-full sm:w-14">
+                                            <Link
+                                                href={`https://www.balaan.co.kr/products?keyword=${result.sku}&page=1&sort=lowPrice&lowest=Y`}
+                                                target="_blank"
+                                                className="w-full"
+                                            >
+                                                발란
+                                            </Link>
+                                        </Button>
+                                    </div>
                                 </TableCell>
                                 <TableCell className="text-right">
                                     <Button
