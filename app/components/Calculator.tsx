@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import {
     Select,
     SelectContent,
@@ -110,7 +110,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
     };
 
     return (
-        <div className="w-full mx-auto space-y-4">
+        <div className="h-full flex flex-col justify-between space-y-4">
             {/* 환율 정보 */}
             <div className="text-right rounded-lg">
                 <h2 className="text-xs text-slate-600">
@@ -164,13 +164,13 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                 </div>
                             </RadioGroup>
                         </div>
-                        <Popover>
-                            <PopoverTrigger asChild>
+                        <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCardTrigger asChild>
                                 <Button variant="outline" size="sm">
                                     컨디션 타입이란?
                                 </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-140">
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-140">
                                 <div className="space-y-2">
                                     <h4 className="font-semibold text-lg">컨디션 타입 설명</h4>
                                     <div className="p-4 py-2 bg-amber-200 rounded-md">
@@ -214,8 +214,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         </p>
                                     </div>
                                 </div>
-                            </PopoverContent>
-                        </Popover>
+                            </HoverCardContent>
+                        </HoverCard>
                     </div>
                 </div>
 
@@ -301,13 +301,13 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                 </div>
                             </RadioGroup>
                         </div>
-                        <Popover>
-                            <PopoverTrigger asChild>
+                        <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCardTrigger asChild>
                                 <Button variant="outline" size="sm">
                                     관세 유무란?
                                 </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-140">
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-140">
                                 <div className="space-y-2">
                                     <h4 className="font-semibold text-lg">관세 적용</h4>
                                     <div className="p-4 py-2 bg-amber-200 rounded-md">
@@ -329,8 +329,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         </p>
                                     </div>
                                 </div>
-                            </PopoverContent>
-                        </Popover>
+                            </HoverCardContent>
+                        </HoverCard>
                     </div>
                 </div>
             </div>
@@ -350,8 +350,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
                 {/* 결과 표시 */}
                 <div className="mt-6 bg-slate-50 p-4 rounded-lg">
-                    <h2 className="text-sm text-slate-600 mb-2">국내 도착가</h2>
-                    <p className="text-2xl text-right font-bold text-slate-900">
+                    <h2 className="text-xs text-slate-600 mb-2">국내 도착가</h2>
+                    <p className="text-xl text-right font-bold text-slate-900">
                         {result
                             ? result.toLocaleString('ko-KR', { maximumFractionDigits: 0 })
                             : '- '}
