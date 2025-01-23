@@ -27,13 +27,20 @@ export async function GET(request: Request) {
 
         const data = await response.json();
 
-        const filteredData = data.filter((rate: any) => ['EUR', 'USD'].includes(rate.cur_unit));
+        const filteredData = data.filter((rate: ExchangeRate) =>
+            ['EUR', 'USD'].includes(rate.cur_unit)
+        );
 
         const res = NextResponse.json(filteredData);
         res.headers.set('Cache-Control', 'public, s-maxage=43200, stale-while-revalidate=86400');
 
         return res;
-    } catch (error: any) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
+    } catch (error: unknown) {
+        // 에러 타입가드
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message }, { status: 500 });
+        }
+
+        return NextResponse.json({ error: 'An unknown error occurred' }, { status: 500 });
     }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Dialog, DialogTrigger } from '@/components/ui/dialog';
+import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -28,7 +28,7 @@ export default function ExchangeCalculator() {
         const dayOfWeek = kstTime.getDay(); // 0: 일요일, 6: 토요일
 
         // 기준일자 설정 (평일 11시 이전이거나 주말인 경우 이전 날짜를 사용)
-        let targetDate = new Date(kstTime);
+        const targetDate = new Date(kstTime);
 
         let reason = '';
         // 주말인 경우
@@ -81,8 +81,10 @@ export default function ExchangeCalculator() {
 
                 const data = await response.json();
                 setExchangeRates(data);
-            } catch (err: any) {
-                setError(err.message);
+            } catch (error: unknown) {
+                if (error instanceof Error) {
+                    setError(error.message);
+                }
             }
         };
 
@@ -105,14 +107,14 @@ export default function ExchangeCalculator() {
                                 간단한 입력으로 최종 가격을 산정하세요.
                             </CardDescription>
                         </div>
-                        <Dialog>
-                            <DialogTrigger asChild>
+                        <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCardTrigger asChild>
                                 <Button variant="outline" size="sm">
                                     사용법
                                 </Button>
-                            </DialogTrigger>
+                            </HoverCardTrigger>
                             <InstructionsDialog />
-                        </Dialog>
+                        </HoverCard>
                     </div>
                 </CardHeader>
                 <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">
@@ -159,14 +161,6 @@ export default function ExchangeCalculator() {
                                 국내 도착가 계산 내역을 검토해보세요.
                             </CardDescription>
                         </div>
-                        {/* <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    사용법
-                                </Button>
-                            </DialogTrigger>
-                            <InstructionsDialog />
-                        </Dialog> */}
                     </div>
                 </CardHeader>
                 <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">

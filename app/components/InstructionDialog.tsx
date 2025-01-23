@@ -1,7 +1,7 @@
 'use client';
 
-import { DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Card } from '@/components/ui/card';
+import { HoverCardContent } from '@/components/ui/hover-card';
 import { Shirt, Euro, DollarSign, Package, Percent, Plane, Check } from 'lucide-react';
 
 const InstructionStep = ({
@@ -26,11 +26,8 @@ const InstructionStep = ({
 
 export default function InstructionsDialog() {
     return (
-        <DialogContent className="max-w-3xl">
-            <DialogHeader>
-                <DialogTitle className="text-2xl mb-6">국내 도착가 계산기 사용법</DialogTitle>
-            </DialogHeader>
-
+        <HoverCardContent className="w-140">
+            <h1 className="text-2xl font-bold mb-6">국내 도착가 계산기 사용법</h1>
             <div className="space-y-6">
                 <InstructionStep
                     icon={Euro}
@@ -119,6 +116,6 @@ export default function InstructionsDialog() {
                     </div>
                 </Card>
             </div>
-        </DialogContent>
+        </HoverCardContent>
     );
 }

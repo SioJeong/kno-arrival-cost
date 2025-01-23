@@ -11,7 +11,7 @@ interface CalculatorState {
 
 const useCalculatorResultStore = createStore<CalculatorState>()(
     persist(
-        (set, get) => ({
+        (set) => ({
             results: [],
 
             addResult: (result: CalculateResult) =>
