@@ -16,7 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Calculator } from 'lucide-react';
+import { Calculator, MessageCircleQuestion } from 'lucide-react';
 import { useStore } from 'zustand';
 import useCalculatorResultStore from '../store/calculatorResultStore';
 
@@ -113,11 +113,35 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
         <div className="h-full flex flex-col justify-between space-y-4">
             {/* 환율 정보 */}
             <div className="text-right rounded-lg">
-                <h2 className="text-xs text-slate-600">
-                    현재 적용된 환율은 기준일자의 최초고시환율{' '}
-                    <strong className="text-slate-900">1{currency}</strong> 당{' '}
-                    <strong className="text-slate-900">{rate}</strong>원입니다.
-                </h2>
+                <div className="flex items-center justify-end gap-1">
+                    <h2 className="text-xs text-slate-600">
+                        현재 적용된 환율은 기준일자의 최초고시환율{' '}
+                        <strong className="text-slate-900">1{currency}</strong> 당{' '}
+                        <strong className="text-slate-900">{rate}</strong>원입니다.
+                    </h2>
+                    <HoverCard openDelay={0} closeDelay={0}>
+                        <HoverCardTrigger asChild>
+                            <MessageCircleQuestion size={16} className="stroke-slate-600" />
+                        </HoverCardTrigger>
+                        <HoverCardContent className="w-140">
+                            <div className="space-y-2">
+                                <div className="p-4 py-2 rounded-md">
+                                    <p className="text-sm mb-1 text-left">
+                                        이 환율은 <b>글로벌 시장에서 고시된 기준 환율</b>을 바탕으로
+                                        갱신된 값입니다.
+                                    </p>
+                                    <p className="text-sm mb-1 text-left">
+                                        환율 정보는 <b>실시간으로 변동</b>될 수 있으며, 일부 오차가
+                                        있을 수 있습니다.
+                                    </p>
+                                    <p className="text-sm mb-1 text-left">
+                                        금융 거래 시 반드시 <b>최신 환율</b>을 확인하시기 바랍니다.
+                                    </p>
+                                </div>
+                            </div>
+                        </HoverCardContent>
+                    </HoverCard>
+                </div>
             </div>
 
             <div className="space-y-4">
