@@ -6,21 +6,21 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { HoverCard, HoverCardTrigger } from '@/components/ui/hover-card';
 import { Button } from '@/components/ui/button';
 
-import Calculator from './/Calculator';
-import InstructionsDialog from './/InstructionDialog';
-import ResultTable from './/ResultTable';
+import Calculator from './Calculator';
+import InstructionsDialog from './InstructionDialog';
+import ResultTable from './ResultTable';
 
 export default function ExchangeCalculator({
     initialRates,
     referenceDate,
 }: {
-    initialRates: ExchangeRate[];
+    initialRates: {
+        eurToKrw: number | null; // 1유로당 원화 환율
+        usdToKrw: number | null; // 1달러당 원화 환율
+    };
     referenceDate: string;
 }) {
-    const [exchangeRates] = useState<ExchangeRate[]>(initialRates);
-
-    const euroRate = exchangeRates.find((rate) => rate.cur_unit === 'EUR');
-    const dollarRate = exchangeRates.find((rate) => rate.cur_unit === 'USD');
+    const [exchangeRates] = useState(initialRates);
 
     return (
         <div className="h-[calc(100vh-theme(spacing.32))] flex gap-4">
@@ -53,21 +53,15 @@ export default function ExchangeCalculator({
                             기준 일자: {referenceDate}
                         </p>
                         <TabsContent value="euro">
-                            {euroRate ? (
-                                <Calculator
-                                    currency="€"
-                                    rate={parseFloat(euroRate.tts.replace(',', ''))}
-                                />
+                            {exchangeRates.eurToKrw ? (
+                                <Calculator currency="€" rate={exchangeRates.eurToKrw} />
                             ) : (
                                 <p>유로 환율 정보를 불러오는 중...</p>
                             )}
                         </TabsContent>
                         <TabsContent value="dollar">
-                            {dollarRate ? (
-                                <Calculator
-                                    currency="$"
-                                    rate={parseFloat(dollarRate.tts.replace(',', ''))}
-                                />
+                            {exchangeRates.usdToKrw ? (
+                                <Calculator currency="$" rate={exchangeRates.usdToKrw} />
                             ) : (
                                 <p>달러 환율 정보를 불러오는 중...</p>
                             )}
