@@ -4,6 +4,15 @@ interface ExchangeRate {
     tts: string; // 송금 보낼때
 }
 
+interface ExchangeRateByEuro {
+    date: string; // 데이터 기준 날짜
+    eur: {
+        [currency: string]: number; // 1유로 기준 다른 통화의 환율
+        krw: number; // 1유로당 한국 원화 환율
+        usd: number; // 1유로당 미국 달러 환율
+    };
+}
+
 interface CalculateResult {
     checked: boolean; // 체크표시
     id: string; // Date
