@@ -3,7 +3,10 @@
 export async function fetchExchangeRates2() {
     try {
         const response = await fetch(
-            'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json'
+            'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json',
+            {
+                next: { revalidate: 3600 }, // 1시간마다 갱신
+            }
         );
 
         if (!response.ok) {
@@ -28,8 +31,8 @@ export async function fetchExchangeRates2() {
         return {
             date: data.date,
             rates: {
-                eurToKrw: Math.round(krwWithSpread * 100) / 100, // 1유로당 한화 금액 (송금 수수료 포함)
-                usdToKrw: Math.round(usdToKrwRate * 100) / 100, // 1달러당 한화 금액
+                eurToKrw: parseFloat(krwWithSpread.toFixed(2)), // 1유로당 한화 금액 (송금 수수료 포함)
+                usdToKrw: parseFloat(usdToKrwRate.toFixed(2)), // 1달러당 한화 금액
             },
         };
     } catch (error) {
