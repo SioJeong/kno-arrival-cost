@@ -23,8 +23,8 @@ export default function ExchangeCalculator({
     const [exchangeRates] = useState(initialRates);
 
     return (
-        <div className="h-[calc(100vh-theme(spacing.32))] flex gap-4">
-            <Card className="w-104 p-4 py-2 flex-shrink-0">
+        <div className="flex flex-col md:flex-row w-full gap-4 flex-1 h-100%">
+            <Card className="mx-w-104 md:w-104 px-2 py-1 md:px-4 md:py-2 flex-shrink-0">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -70,14 +70,14 @@ export default function ExchangeCalculator({
                 </CardContent>
             </Card>
 
-            <Card className="flex-grow">
+            <Card className="flex-grow hidden md:block px-2 py-1 md:px-4 md:py-2">
                 <CardHeader>
                     <CardTitle className="text-2xl">계산 내역</CardTitle>
                     <CardDescription className="mt-1.5">
                         국내 도착가 계산 내역을 검토해보세요.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">
+                <CardContent className="h-[calc(100%-theme(spacing.24))]">
                     <ResultTable />
                 </CardContent>
             </Card>
