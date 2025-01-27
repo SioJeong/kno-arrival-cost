@@ -13,21 +13,21 @@ const InstructionStep = ({
     title: string;
     description: React.ReactNode;
 }) => (
-    <div className="flex items-start space-x-3 mb-4">
+    <div className="flex items-start space-x-2 md:space-x-3 mb-2 md:mb-4">
         <div className="flex-shrink-0 mt-1">
-            <Icon className="h-5 w-5 text-primary" />
+            <Icon className="h-4 w-4 md:h-5 md:w-5 text-primary" />
         </div>
         <div>
-            <h3 className="font-medium mb-1">{title}</h3>
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <h3 className="text-sm font-medium mb-0.5 md:mb-1">{title}</h3>
+            <p className="text-xs md:text-sm text-muted-foreground">{description}</p>
         </div>
     </div>
 );
 
 export default function InstructionsDialog() {
     return (
-        <HoverCardContent className="w-140">
-            <h1 className="text-2xl font-bold mb-6">국내 도착가 계산기 사용법</h1>
+        <HoverCardContent className="w-[280px] md:w-[560px]">
+            <h1 className="text-xl font-bold mb-6">국내 도착가 계산기 사용법</h1>
             <div className="space-y-6">
                 <InstructionStep
                     icon={Euro}
@@ -85,29 +85,29 @@ export default function InstructionsDialog() {
                     }
                 />
 
-                <Card className="p-4 bg-amber-200">
-                    <div className="space-y-4">
-                        <div className="flex items-start space-x-3">
-                            <Plane className="h-5 w-5 text-primary mt-1" />
+                <Card className="p-2 md:p-4 bg-amber-200">
+                    <div className="space-y-2 md:space-y-4">
+                        <div className="flex items-start space-x-2 md:space-x-3">
+                            <Plane className="h-4 w-4 md:h-5 md:w-5 text-primary mt-1" />
                             <div>
-                                <h3 className="font-medium mb-1">6. 관세 정보</h3>
-                                <p className="text-sm">
-                                    • FTA 적용 가능한 <b>EU Origin</b> 제품은 관세 혜택이
+                                <h3 className="text-sm font-medium mb-1">6. 관세 정보</h3>
+                                <p className="text-sm text-muted-foreground">
+                                    FTA 적용 가능한 <b>EU Origin</b> 제품은 관세 혜택이 가능합니다.
+                                    <br />
+                                    대부분의 명품은 <b>EU Origin</b>이므로 관세 없이 계산
                                     가능합니다.
-                                    <br />• 대부분의 명품은 <b>EU Origin</b>이므로 관세 없이 계산
-                                    가능합니다.
-                                    <br />• FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함
-                                    계수
-                                    <b>1.25-1.4</b>가 추가로 적용되어 계산됩니다.
+                                    <br />
+                                    FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함 계수
+                                    <b> 1.25 ~ 1.4</b>가 추가로 적용되어 계산됩니다.
                                 </p>
                             </div>
                         </div>
 
-                        <div className="flex items-start space-x-3">
-                            <Percent className="h-5 w-5 text-primary mt-1" />
+                        <div className="flex items-start space-x-2 md:space-x-3">
+                            <Percent className="h-4 w-4 md:h-5 md:w-5 text-primary mt-1" />
                             <div>
-                                <h3 className="font-medium mb-1">7. 부가세</h3>
-                                <p className="text-sm">
+                                <h3 className="text-sm font-medium mb-1">7. 부가세</h3>
+                                <p className="text-sm text-muted-foreground">
                                     부가세는 자동으로 <b>10%</b> 적용됩니다.
                                     <br />(<b>K&O int.</b>가 부가세 납부 후 통관 진행)
                                 </p>
