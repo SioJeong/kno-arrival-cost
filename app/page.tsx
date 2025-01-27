@@ -1,8 +1,8 @@
-import { fetchExchangeRates2 } from './actions/fetchExchangeRates2';
+import { fetchExchangeRates } from './actions/fetchExchangeRates';
 import ArrivalCostCalculator from './components/ArrivalCostCalculator';
 
 export default async function Page() {
-    const { date, rates } = await fetchExchangeRates2();
+    const { date, rates } = await fetchExchangeRates();
 
     return <ArrivalCostCalculator initialRates={rates} referenceDate={date} />;
 }
