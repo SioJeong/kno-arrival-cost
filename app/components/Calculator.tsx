@@ -148,28 +148,31 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                         <strong className="text-slate-900">1{currency}</strong> 당{' '}
                         <strong className="text-slate-900">{rate}</strong>원입니다.
                     </h2>
-                    <HoverCard openDelay={0} closeDelay={0}>
-                        <HoverCardTrigger asChild>
-                            <MessageCircleQuestion size={16} className="stroke-slate-600" />
-                        </HoverCardTrigger>
-                        <HoverCardContent className="w-140">
-                            <div className="space-y-2">
-                                <div className="p-2 md:p-4 py-2 rounded-md">
-                                    <p className="text-sm mb-1 text-left">
-                                        이 환율은 <b>글로벌 시장에서 고시된 기준 환율</b>을 바탕으로
-                                        갱신된 값입니다.
-                                    </p>
-                                    <p className="text-sm mb-1 text-left">
-                                        환율 정보는 <b>실시간으로 변동</b>될 수 있으며, 일부 오차가
-                                        있을 수 있습니다.
-                                    </p>
-                                    <p className="text-sm mb-1 text-left">
-                                        금융 거래 시 반드시 <b>최신 환율</b>을 확인하시기 바랍니다.
-                                    </p>
+                    <div className="hidden md:block">
+                        <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCardTrigger asChild>
+                                <MessageCircleQuestion size={16} className="stroke-slate-600" />
+                            </HoverCardTrigger>
+                            <HoverCardContent className="w-140">
+                                <div className="space-y-2">
+                                    <div className="p-2 md:p-4 py-2 rounded-md">
+                                        <p className="text-sm mb-1 text-left">
+                                            이 환율은 <b>글로벌 시장에서 고시된 기준 환율</b>을
+                                            바탕으로 갱신된 값입니다.
+                                        </p>
+                                        <p className="text-sm mb-1 text-left">
+                                            환율 정보는 <b>실시간으로 변동</b>될 수 있으며, 일부
+                                            오차가 있을 수 있습니다.
+                                        </p>
+                                        <p className="text-sm mb-1 text-left">
+                                            금융 거래 시 반드시 <b>최신 환율</b>을 확인하시기
+                                            바랍니다.
+                                        </p>
+                                    </div>
                                 </div>
-                            </div>
-                        </HoverCardContent>
-                    </HoverCard>
+                            </HoverCardContent>
+                        </HoverCard>
+                    </div>
                 </div>
             </div>
 
@@ -239,58 +242,60 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                 </div>
                             </RadioGroup>
                         </div>
-                        <HoverCard openDelay={0} closeDelay={0}>
-                            <HoverCardTrigger asChild>
-                                <Button variant="outline" size="sm" className="text-sm">
-                                    컨디션 타입이란?
-                                </Button>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-140">
-                                <div className="space-y-2">
-                                    <h4 className="font-semibold text-lg">컨디션 타입 설명</h4>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm mb-1">
-                                            <b>Cost Price +</b>: 원가에 컨디션을 더하여 납품가를
-                                            산정합니다.
-                                        </p>
-                                        <p className="text-sm">
-                                            예를들어 Cost Price 100€에 Condition이 20%라면{' '}
-                                            <b>120€</b>이 됩니다.
-                                        </p>
+                        <div className="hidden md:block">
+                            <HoverCard openDelay={0} closeDelay={0}>
+                                <HoverCardTrigger asChild>
+                                    <Button variant="outline" size="sm" className="text-sm">
+                                        컨디션 타입이란?
+                                    </Button>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="w-140">
+                                    <div className="space-y-2">
+                                        <h4 className="font-semibold text-lg">컨디션 타입 설명</h4>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm mb-1">
+                                                <b>Cost Price +</b>: 원가에 컨디션을 더하여 납품가를
+                                                산정합니다.
+                                            </p>
+                                            <p className="text-sm">
+                                                예를들어 Cost Price 100€에 Condition이 20%라면{' '}
+                                                <b>120€</b>이 됩니다.
+                                            </p>
+                                        </div>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm mb-1">
+                                                <b>Retail Price -</b>: 소비자가에서 컨디션을 빼고
+                                                납품가를 산정합니다.
+                                            </p>
+                                            <p className="text-sm">
+                                                예를들어 Retail Price 100€에 Condition이 20%라면{' '}
+                                                <b>80€</b>이 됩니다.
+                                            </p>
+                                        </div>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm mb-1">
+                                                <b>Cost Price -</b>: 원가에서 컨디션을 빼고 납품가를
+                                                산정합니다.
+                                            </p>
+                                            <p className="text-sm">
+                                                예를들어 Cost Price 100€에 Condition이 20%라면{' '}
+                                                <b>80€</b>이 됩니다.
+                                            </p>
+                                        </div>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm mb-1">
+                                                <b>Retail Price +</b>: 소비자가에 컨디션을 더하여
+                                                납품가를 산정합니다.
+                                            </p>
+                                            <p className="text-sm">
+                                                예를들어 Retail Price 100€에 Condition이 20%라면{' '}
+                                                <b>120€</b>이 됩니다.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm mb-1">
-                                            <b>Retail Price -</b>: 소비자가에서 컨디션을 빼고
-                                            납품가를 산정합니다.
-                                        </p>
-                                        <p className="text-sm">
-                                            예를들어 Retail Price 100€에 Condition이 20%라면{' '}
-                                            <b>80€</b>이 됩니다.
-                                        </p>
-                                    </div>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm mb-1">
-                                            <b>Cost Price -</b>: 원가에서 컨디션을 빼고 납품가를
-                                            산정합니다.
-                                        </p>
-                                        <p className="text-sm">
-                                            예를들어 Cost Price 100€에 Condition이 20%라면{' '}
-                                            <b>80€</b>이 됩니다.
-                                        </p>
-                                    </div>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm mb-1">
-                                            <b>Retail Price +</b>: 소비자가에 컨디션을 더하여
-                                            납품가를 산정합니다.
-                                        </p>
-                                        <p className="text-sm">
-                                            예를들어 Retail Price 100€에 Condition이 20%라면{' '}
-                                            <b>120€</b>이 됩니다.
-                                        </p>
-                                    </div>
-                                </div>
-                            </HoverCardContent>
-                        </HoverCard>
+                                </HoverCardContent>
+                            </HoverCard>
+                        </div>
                     </div>
                 </div>
 
@@ -363,7 +368,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                             <RadioGroup
                                 value={duties}
                                 onValueChange={setDuties}
-                                className="flex space-x-2 md:space-x-4"
+                                className="flex space-x-4"
                             >
                                 <div className="flex items-center space-x-1 md:space-x-2">
                                     <RadioGroupItem value="dutyFree" id="dutyFree" />
@@ -379,36 +384,40 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                 </div>
                             </RadioGroup>
                         </div>
-                        <HoverCard openDelay={0} closeDelay={0}>
-                            <HoverCardTrigger asChild>
-                                <Button variant="outline" size="sm" className="text-sm">
-                                    관세 유무란?
-                                </Button>
-                            </HoverCardTrigger>
-                            <HoverCardContent className="w-140">
-                                <div className="space-y-2">
-                                    <h4 className="font-semibold text-lg">관세 적용</h4>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm">
-                                            FTA 적용 가능한 EU Origin 제품은 관세 혜택이 가능합니다.
-                                        </p>
+                        <div className="hidden md:block">
+                            <HoverCard openDelay={0} closeDelay={0}>
+                                <HoverCardTrigger asChild>
+                                    <Button variant="outline" size="sm" className="text-sm">
+                                        관세 유무란?
+                                    </Button>
+                                </HoverCardTrigger>
+                                <HoverCardContent className="w-140">
+                                    <div className="space-y-2">
+                                        <h4 className="font-semibold text-lg">관세 적용</h4>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm">
+                                                FTA 적용 가능한 EU Origin 제품은 관세 혜택이
+                                                가능합니다.
+                                            </p>
+                                        </div>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm">
+                                                대부분의 명품은 EU Origin이므로 관세 없이 계산
+                                                가능합니다.
+                                            </p>
+                                        </div>
+                                        <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
+                                            <p className="text-sm">
+                                                FTA 불가능 제품은 부피에 따라 관/부가세와 배송비
+                                                포함
+                                                <br />
+                                                계수 <b>1.25-1.4</b>가 추가로 적용되어 계산됩니다.
+                                            </p>
+                                        </div>
                                     </div>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm">
-                                            대부분의 명품은 EU Origin이므로 관세 없이 계산
-                                            가능합니다.
-                                        </p>
-                                    </div>
-                                    <div className="p-2 md:p-4 py-2 bg-amber-200 rounded-md">
-                                        <p className="text-sm">
-                                            FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함
-                                            <br />
-                                            계수 <b>1.25-1.4</b>가 추가로 적용되어 계산됩니다.
-                                        </p>
-                                    </div>
-                                </div>
-                            </HoverCardContent>
-                        </HoverCard>
+                                </HoverCardContent>
+                            </HoverCard>
+                        </div>
                     </div>
                 </div>
             </div>

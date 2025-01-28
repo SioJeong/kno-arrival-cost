@@ -33,14 +33,16 @@ export default function ExchangeCalculator({
                                 간단한 입력으로 최종 가격을 산정하세요.
                             </CardDescription>
                         </div>
-                        <HoverCard openDelay={0} closeDelay={0}>
-                            <HoverCardTrigger asChild>
-                                <Button variant="outline" size="sm">
-                                    사용법
-                                </Button>
-                            </HoverCardTrigger>
-                            <InstructionsDialog />
-                        </HoverCard>
+                        <div className="hidden md:block">
+                            <HoverCard openDelay={0} closeDelay={0}>
+                                <HoverCardTrigger asChild>
+                                    <Button variant="outline" size="sm">
+                                        사용법
+                                    </Button>
+                                </HoverCardTrigger>
+                                <InstructionsDialog />
+                            </HoverCard>
+                        </div>
                     </div>
                 </CardHeader>
                 <CardContent className="h-[calc(100%-theme(spacing.24))] overflow-auto">
