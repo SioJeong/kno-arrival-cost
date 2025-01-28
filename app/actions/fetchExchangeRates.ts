@@ -5,7 +5,7 @@ export async function fetchExchangeRates() {
         const response = await fetch(
             'https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/eur.json',
             {
-                next: { revalidate: 3600 }, // 1시간마다 갱신
+                cache: 'no-store',
             }
         );
 
