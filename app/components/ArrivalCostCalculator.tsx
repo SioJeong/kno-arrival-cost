@@ -34,7 +34,7 @@ export default function ExchangeCalculator({
                             </CardDescription>
                         </div>
                         <div className="hidden md:block">
-                            <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCard openDelay={0} closeDelay={100}>
                                 <HoverCardTrigger asChild>
                                     <Button variant="outline" size="sm">
                                         사용법
