@@ -7,6 +7,7 @@ interface CalculatorState {
     deleteResult: (id: string) => void;
     updateResult: (updatedResult: CalculateResult) => void;
     toggleChecked: (id: string) => void;
+    updateMemo: (id: string, memo: string) => void;
 }
 
 const useCalculatorResultStore = createStore<CalculatorState>()(
@@ -28,12 +29,18 @@ const useCalculatorResultStore = createStore<CalculatorState>()(
                         result.id === updatedResult.id ? updatedResult : result
                     ),
                 })),
-            toggleChecked: (
-                id: string // 체크박스 토글 함수
-            ) =>
+
+            toggleChecked: (id: string) =>
                 set((state) => ({
                     results: state.results.map((result) =>
                         result.id === id ? { ...result, checked: !result.checked } : result
+                    ),
+                })),
+
+            updateMemo: (id: string, memo: string) =>
+                set((state) => ({
+                    results: state.results.map((result) =>
+                        result.id === id ? { ...result, memo } : result
                     ),
                 })),
         }),

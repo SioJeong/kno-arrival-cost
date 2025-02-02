@@ -149,7 +149,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                         <strong className="text-slate-900">{rate}</strong>원입니다.
                     </h2>
                     <div className="hidden md:block">
-                        <HoverCard openDelay={0} closeDelay={0}>
+                        <HoverCard openDelay={0} closeDelay={100}>
                             <HoverCardTrigger asChild>
                                 <MessageCircleQuestion size={16} className="stroke-slate-600" />
                             </HoverCardTrigger>
@@ -200,18 +200,19 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                 <div className="space-y-1.5">
                     <Label className="text-sm">Condition Type</Label>
                     <div
-                        className={`
-              flex items-center justify-between 
-              bg-slate-50 
-              p-2 md:p-3 
-              rounded-lg
-            `}
+                        className="
+                            flex items-center
+                            justify-between
+                            bg-slate-50 
+                            p-2 md:p-3 
+                            rounded-lg
+                            "
                     >
                         <div className="flex items-center space-x-2 md:space-x-4">
                             <RadioGroup
                                 value={conditionType}
                                 onValueChange={setConditionType}
-                                className="grid grid-cols-2 gap-2"
+                                className="grid grid-cols-2 gap-x-6 md:gap-x-1 gap-y-2"
                             >
                                 <div className="flex items-center space-x-1 md:space-x-2">
                                     <RadioGroupItem value="costPlus" id="cost-plus-condition" />
@@ -243,9 +244,9 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                             </RadioGroup>
                         </div>
                         <div className="hidden md:block">
-                            <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCard openDelay={0} closeDelay={100}>
                                 <HoverCardTrigger asChild>
-                                    <Button variant="outline" size="sm" className="text-sm">
+                                    <Button variant="outline" size="sm" className="text-xs">
                                         컨디션 타입이란?
                                     </Button>
                                 </HoverCardTrigger>
@@ -368,7 +369,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                             <RadioGroup
                                 value={duties}
                                 onValueChange={setDuties}
-                                className="flex space-x-4"
+                                className="flex space-x-4 gap-x-6 md:gap-x-1 gap-y-2"
                             >
                                 <div className="flex items-center space-x-1 md:space-x-2">
                                     <RadioGroupItem value="dutyFree" id="dutyFree" />
@@ -385,9 +386,9 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                             </RadioGroup>
                         </div>
                         <div className="hidden md:block">
-                            <HoverCard openDelay={0} closeDelay={0}>
+                            <HoverCard openDelay={0} closeDelay={100}>
                                 <HoverCardTrigger asChild>
-                                    <Button variant="outline" size="sm" className="text-sm">
+                                    <Button variant="outline" size="sm" className="text-xs">
                                         관세 유무란?
                                     </Button>
                                 </HoverCardTrigger>
