@@ -19,29 +19,28 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { HoverCard, HoverCardContent, HoverCardTrigger } from '@/components/ui/hover-card';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export default function ResultTable() {
     const results = useStore(useCalculatorResultStore, (state) => state.results);
     const deleteResult = useStore(useCalculatorResultStore, (state) => state.deleteResult);
     const toggleChecked = useStore(useCalculatorResultStore, (state) => state.toggleChecked);
-    const updateResult = useStore(useCalculatorResultStore, (state) => state.updateResult);
+    const updateMemo = useStore(useCalculatorResultStore, (state) => state.updateMemo);
 
-    // 현재 편집 중인 메모 상태 관리
-    const [editingMemo, setEditingMemo] = useState<string>('');
+    // 각 행의 메모 편집 상태를 관리하는 객체: key는 result.id, value는 편집 중인 memo 문자열
+    const [editingMemo, setEditingMemo] = useState<{ [id: string]: string }>({});
 
-    // 메모 수정 핸들러
     const handleMemoSave = (result: CalculateResult) => {
-        updateResult({
-            ...result,
-            memo: editingMemo,
-        });
+        const newMemo = editingMemo[result.id] ?? '';
+        updateMemo(result.id, newMemo);
+        toast.success('메모가 저장되었습니다!');
     };
 
     return (
         <Table>
             <TableCaption>
                 시장가 검색 기능과 목록 좌측의 체크 기능을 활용하여, 바잉하실 상품을 손쉽게
-                분류하세요!{' '}
+                분류하세요!
             </TableCaption>
             <TableHeader className="sticky top-0 bg-white z-10">
                 <TableRow>
@@ -54,7 +53,7 @@ export default function ResultTable() {
                     <TableHead className="w-32 text-center font-semibold">Final Price</TableHead>
                     <TableHead className="w-16 text-center">Memo</TableHead>
                     <TableHead className="w-40 text-center">
-                        <HoverCard openDelay={0} closeDelay={0}>
+                        <HoverCard openDelay={0} closeDelay={100}>
                             <HoverCardTrigger asChild>
                                 <div className="flex flex-row justify-center items-center gap-2">
                                     시장가 검색
@@ -62,7 +61,7 @@ export default function ResultTable() {
                                 </div>
                             </HoverCardTrigger>
                             <HoverCardContent className="w-100">
-                                <div className="flex flex-col items-start space-y-2 text-xs text-left">
+                                <div className="flex flex-col items-start space-y-2 text-sm text-left">
                                     <p>
                                         입력하신 <strong>SKU 넘버</strong>를 다른 플랫폼에서 가격
                                         조회할 수 있도록 만든 시스템입니다.
@@ -113,19 +112,32 @@ export default function ResultTable() {
                         <TableCell className="text-center">
                             <Popover>
                                 <PopoverTrigger asChild>
-                                    <Button variant="outline" size="sm">
+                                    <Button
+                                        variant="outline"
+                                        size="sm"
+                                        className={result.memo?.length ? 'bg-yellow-600' : ''}
+                                    >
                                         <SquarePen />
                                     </Button>
                                 </PopoverTrigger>
                                 <PopoverContent className="w-80">
                                     <div className="grid gap-4">
                                         <div className="grid gap-2">
-                                            <Label htmlFor="memo">Memo</Label>
+                                            <Label htmlFor={`memo-${result.id}`}>Memo</Label>
                                             <Textarea
-                                                id="memo"
+                                                id={`memo-${result.id}`}
                                                 placeholder="메모를 입력하세요."
-                                                defaultValue={result.memo}
-                                                onChange={(e) => setEditingMemo(e.target.value)}
+                                                value={
+                                                    editingMemo[result.id] !== undefined
+                                                        ? editingMemo[result.id]
+                                                        : result.memo || ''
+                                                }
+                                                onChange={(e) =>
+                                                    setEditingMemo((prev) => ({
+                                                        ...prev,
+                                                        [result.id]: e.target.value,
+                                                    }))
+                                                }
                                                 className="max-h-40"
                                             />
                                         </div>
@@ -165,7 +177,10 @@ export default function ResultTable() {
                             <Button
                                 className="bg-red-400"
                                 size="sm"
-                                onClick={() => deleteResult(result.id)}
+                                onClick={() => {
+                                    deleteResult(result.id);
+                                    toast.success('계산 내역이 삭제되었습니다!');
+                                }}
                             >
                                 <Trash2 />
                             </Button>
