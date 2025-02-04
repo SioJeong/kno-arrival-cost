@@ -27,7 +27,6 @@ export default function ResultTable() {
     const toggleChecked = useStore(useCalculatorResultStore, (state) => state.toggleChecked);
     const updateMemo = useStore(useCalculatorResultStore, (state) => state.updateMemo);
 
-    // 각 행의 메모 편집 상태를 관리하는 객체: key는 result.id, value는 편집 중인 memo 문자열
     const [editingMemo, setEditingMemo] = useState<{ [id: string]: string }>({});
 
     const handleMemoSave = (result: CalculateResult) => {
