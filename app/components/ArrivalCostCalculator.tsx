@@ -24,7 +24,7 @@ export default function ExchangeCalculator({
 
     return (
         <div className="flex flex-col md:flex-row w-full gap-4 flex-1 h-100%">
-            <Card className="mx-w-104 md:w-104 px-2 py-1 md:px-4 md:py-2 flex-shrink-0">
+            <Card className="mx-w-104 md:w-104 px-2 py-1 md:px-4 md:py-2 flex-shrink-0 metalic">
                 <CardHeader>
                     <div className="flex justify-between items-start">
                         <div>
@@ -36,7 +36,7 @@ export default function ExchangeCalculator({
                         <div className="hidden md:block">
                             <HoverCard openDelay={0} closeDelay={100}>
                                 <HoverCardTrigger asChild>
-                                    <Button variant="outline" size="sm">
+                                    <Button variant="outline" size="sm" className="btn-primary">
                                         사용법
                                     </Button>
                                 </HoverCardTrigger>
@@ -51,9 +51,7 @@ export default function ExchangeCalculator({
                             <TabsTrigger value="euro">유로 €</TabsTrigger>
                             <TabsTrigger value="dollar">달러 $</TabsTrigger>
                         </TabsList>
-                        <p className="text-xs text-right text-slate-600 mb-4">
-                            기준 일자: {referenceDate}
-                        </p>
+                        <p className="text-sm text-right mb-4">기준일자: {referenceDate}</p>
                         <TabsContent value="euro">
                             {exchangeRates.eurToKrw ? (
                                 <Calculator currency="€" rate={exchangeRates.eurToKrw} />
@@ -72,7 +70,7 @@ export default function ExchangeCalculator({
                 </CardContent>
             </Card>
 
-            <Card className="flex-grow hidden md:block px-2 py-1 md:px-4 md:py-2">
+            <Card className="flex-grow hidden md:block px-2 py-1 md:px-4 md:py-2 metalic">
                 <CardHeader>
                     <CardTitle className="text-2xl">계산 내역</CardTitle>
                     <CardDescription className="mt-1.5">
