@@ -1,6 +1,5 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
 import { HoverCardContent } from '@/components/ui/hover-card';
 import { Shirt, Euro, DollarSign, Package, Percent, Plane, Check } from 'lucide-react';
 
@@ -13,22 +12,24 @@ const InstructionStep = ({
     title: string;
     description: React.ReactNode;
 }) => (
-    <div className="flex items-start space-x-2 md:space-x-3 mb-2 md:mb-4">
-        <div className="flex-shrink-0 mt-1">
-            <Icon className="h-4 w-4 md:h-5 md:w-5 text-primary" />
-        </div>
-        <div>
-            <h3 className="text-sm font-medium mb-0.5 md:mb-1">{title}</h3>
-            <p className="text-xs md:text-sm text-muted-foreground">{description}</p>
+    <div className="flex items-start">
+        <div className="flex gap-4 w-full p-2 md:p-4 py-2 bg-background rounded-md">
+            <div className="flex-shrink-0">
+                <Icon className="h-8 w-8 md:h-5 md:w-5 text-foreground" />
+            </div>
+            <div>
+                <h3 className="text-sm font-bold mb-0.5 md:mb-1">{title}</h3>
+                <p className="text-xs md:text-xs">{description}</p>
+            </div>
         </div>
     </div>
 );
 
 export default function InstructionsDialog() {
     return (
-        <HoverCardContent className="w-[280px] md:w-[560px]">
+        <HoverCardContent className="w-[280px] md:w-[500px] hover-content">
             <h1 className="text-xl font-bold mb-6">국내 도착가 계산기 사용법</h1>
-            <div className="space-y-6">
+            <div className="space-y-2">
                 <InstructionStep
                     icon={Euro}
                     title="1. 통화 선택"
@@ -66,10 +67,10 @@ export default function InstructionsDialog() {
                     title="4. 가격 입력"
                     description={
                         <>
-                            <b>Cost(Wholesale) Price</b> 혹은 <b>Retail Price</b>와 Condition을
-                            입력하세요.
+                            <b>Cost(Wholesale) Price</b> 혹은 <b>Retail Price</b>와 <b>Condition</b>
+                            을 입력하세요.
                             <br />
-                            C+, C-, R- 조건에 맞게 기입해 주세요.
+                            C+, C-, R-, R+ 조건에 맞게 기입해 주세요.
                         </>
                     }
                 />
@@ -85,36 +86,31 @@ export default function InstructionsDialog() {
                     }
                 />
 
-                <Card className="p-2 md:p-4 bg-amber-200">
-                    <div className="space-y-2 md:space-y-4">
-                        <div className="flex items-start space-x-2 md:space-x-3">
-                            <Plane className="h-4 w-4 md:h-5 md:w-5 text-primary mt-1" />
-                            <div>
-                                <h3 className="text-sm font-medium mb-1">6. 관세 정보</h3>
-                                <p className="text-sm text-muted-foreground">
-                                    FTA 적용 가능한 <b>EU Origin</b> 제품은 관세 혜택이 가능합니다.
-                                    <br />
-                                    대부분의 명품은 <b>EU Origin</b>이므로 관세 없이 계산
-                                    가능합니다.
-                                    <br />
-                                    FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함 계수
-                                    <b> 1.25 ~ 1.4</b>가 추가로 적용되어 계산됩니다.
-                                </p>
-                            </div>
-                        </div>
+                <InstructionStep
+                    icon={Plane}
+                    title="6. 관세 정보"
+                    description={
+                        <>
+                            FTA 적용 가능한 <b>EU Origin</b> 제품은 관세 혜택이 가능합니다.
+                            <br />
+                            대부분의 명품은 <b>EU Origin</b>이므로 관세 없이 계산 가능합니다.
+                            <br />
+                            FTA 불가능 제품은 부피에 따라 관/부가세와 배송비 포함 계수
+                            <b> 1.25 ~ 1.4</b>가 추가로 적용되어 계산됩니다.
+                        </>
+                    }
+                />
 
-                        <div className="flex items-start space-x-2 md:space-x-3">
-                            <Percent className="h-4 w-4 md:h-5 md:w-5 text-primary mt-1" />
-                            <div>
-                                <h3 className="text-sm font-medium mb-1">7. 부가세</h3>
-                                <p className="text-sm text-muted-foreground">
-                                    부가세는 자동으로 <b>10%</b> 적용됩니다.
-                                    <br />(<b>K&O int.</b>가 부가세 납부 후 통관 진행)
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                </Card>
+                <InstructionStep
+                    icon={Percent}
+                    title="7. 부가세"
+                    description={
+                        <>
+                            부가세는 자동으로 <b>10%</b> 적용됩니다.
+                            <br />(<b>K&O int.</b>가 부가세 납부 후 통관 진행)
+                        </>
+                    }
+                />
             </div>
         </HoverCardContent>
     );
