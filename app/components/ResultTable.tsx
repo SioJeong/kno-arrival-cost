@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Star, SquarePen, Trash2, MessageCircleQuestion } from 'lucide-react';
+import { Star, SquarePen, Trash2, CircleHelp } from 'lucide-react';
 import Link from 'next/link';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -27,7 +27,6 @@ export default function ResultTable() {
     const toggleChecked = useStore(useCalculatorResultStore, (state) => state.toggleChecked);
     const updateMemo = useStore(useCalculatorResultStore, (state) => state.updateMemo);
 
-    // 각 행의 메모 편집 상태를 관리하는 객체: key는 result.id, value는 편집 중인 memo 문자열
     const [editingMemo, setEditingMemo] = useState<{ [id: string]: string }>({});
 
     const handleMemoSave = (result: CalculateResult) => {
@@ -39,10 +38,11 @@ export default function ResultTable() {
     return (
         <Table>
             <TableCaption>
-                시장가 검색 기능과 목록 좌측의 체크 기능을 활용하여, 바잉하실 상품을 손쉽게
-                분류하세요!
+                목록 좌측의 체크 기능을 활용하여, 바잉하실 상품을 손쉽게 분류하세요! <br />
+                <br />
+                시장가 검색 기능을 통해 가격을 확인하고 메모도 작성할 수 있습니다.
             </TableCaption>
-            <TableHeader className="sticky top-0 bg-white z-10">
+            <TableHeader className="sticky top-0 bg-white z-10 bg-transparent">
                 <TableRow>
                     <TableHead className="w-12 text-center">Check</TableHead>
                     <TableHead className="w-44 text-center">SKU</TableHead>
@@ -50,14 +50,16 @@ export default function ResultTable() {
                     <TableHead className="w-24 text-center">Condition</TableHead>
                     <TableHead className="w-32 text-center">Category</TableHead>
                     <TableHead className="w-20 text-center">Customs</TableHead>
-                    <TableHead className="w-32 text-center font-semibold">Final Price</TableHead>
+                    <TableHead className="w-32 text-center font-semibold text-emerald-300">
+                        Final Price
+                    </TableHead>
                     <TableHead className="w-16 text-center">Memo</TableHead>
                     <TableHead className="w-40 text-center">
                         <HoverCard openDelay={0} closeDelay={100}>
                             <HoverCardTrigger asChild>
                                 <div className="flex flex-row justify-center items-center gap-2">
                                     시장가 검색
-                                    <MessageCircleQuestion size={20} color="black" />
+                                    <CircleHelp size={16} className="stroke-card-foreground" />
                                 </div>
                             </HoverCardTrigger>
                             <HoverCardContent className="w-100">
@@ -80,21 +82,16 @@ export default function ResultTable() {
             </TableHeader>
             <TableBody className="overflow-auto">
                 {results.map((result: CalculateResult) => (
-                    <TableRow
-                        key={result.id}
-                        className={`${result.checked ? 'bg-lime-300' : ''} hover:${
-                            result.checked ? 'bg-lime-100' : 'bg-zinc-100'
-                        }`}
-                    >
+                    <TableRow key={result.id}>
                         <TableCell className="text-center p-0">
                             <div className="flex items-center justify-center h-full w-full">
                                 <Star
                                     onClick={() => toggleChecked(result.id)}
-                                    size={24}
+                                    size={20}
                                     className={`cursor-pointer transition-colors duration-200 ${
                                         result.checked
-                                            ? 'fill-yellow-500 text-yellow-500'
-                                            : 'text-gray-400'
+                                            ? 'fill-amber-600 text-amber-600'
+                                            : 'text-card-foreground'
                                     }`}
                                 />
                             </div>
@@ -106,7 +103,7 @@ export default function ResultTable() {
                         <TableCell className="text-center">
                             {result.customDuty ? 'O' : 'X'}
                         </TableCell>
-                        <TableCell className="text-center font-semibold">
+                        <TableCell className="text-center font-semibold text-emerald-300">
                             ₩{result.finalPrice.toLocaleString()}
                         </TableCell>
                         <TableCell className="text-center">
@@ -115,7 +112,11 @@ export default function ResultTable() {
                                     <Button
                                         variant="outline"
                                         size="sm"
-                                        className={result.memo?.length ? 'bg-yellow-600' : ''}
+                                        className={
+                                            result.memo?.length
+                                                ? 'bg-amber-600 hover:bg-amber-500 border-none'
+                                                : 'btn-primary'
+                                        }
                                     >
                                         <SquarePen />
                                     </Button>
@@ -143,7 +144,7 @@ export default function ResultTable() {
                                         </div>
                                         <Button
                                             onClick={() => handleMemoSave(result)}
-                                            className="w-full"
+                                            className="w-full btn-primary"
                                         >
                                             Save
                                         </Button>
@@ -175,7 +176,7 @@ export default function ResultTable() {
                         </TableCell>
                         <TableCell className="text-right">
                             <Button
-                                className="bg-red-400"
+                                className="bg-red-900 hover:bg-red-800"
                                 size="sm"
                                 onClick={() => {
                                     deleteResult(result.id);
