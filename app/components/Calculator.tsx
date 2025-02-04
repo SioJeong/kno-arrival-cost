@@ -19,6 +19,7 @@ import { toast } from 'sonner';
 import { Calculator, CircleHelp } from 'lucide-react';
 import { useStore } from 'zustand';
 import useCalculatorResultStore from '../store/calculatorResultStore';
+import { useSpring, animated } from 'react-spring';
 
 export default function CalculatorApp({ currency, rate }: { currency: string; rate: number }) {
     const [sku, setSku] = useState<string | null>(null);
@@ -27,7 +28,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
     const [condition, setCondition] = useState<number | null>(null);
     const [duties, setDuties] = useState<string>('dutyFree'); // 'dutyFree' or 'notDutyFree'
     const [category, setCategory] = useState<string | null>(null);
-    const [result, setResult] = useState<number | null>(null);
+    const [, setResult] = useState<number | null>(null);
 
     const addResult = useStore(useCalculatorResultStore, (state) => state.addResult);
 
@@ -41,6 +42,11 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
         jacket: 1.06,
         shoes: 1.07,
     };
+
+    const [springResult, api] = useSpring(() => ({
+        number: 0,
+        config: { tension: 0, friction: 0, clamp: true },
+    }));
 
     const handleCalculate = () => {
         if (!isReady) return;
@@ -96,6 +102,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
         const roundedResult = Math.round(calculatedResult / 100) * 100;
         setResult(roundedResult);
+
+        api.start({ number: roundedResult });
 
         const conditionTypeMapper: Record<string, string> = {
             costPlus: 'C+',
@@ -469,13 +477,15 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
             {/* 하단 영역 (버튼 + 결과 표시) */}
             <div>
-                <div className="text-right mb-4">
+                <div className="text-left mb-4">
                     {/* 계산 버튼 */}
                     <Button
                         className="w-2/5 text-base py-6 mt-4 bg-red-900 hover:bg-red-800"
                         onClick={() => {
                             handleCalculate();
-                            toast.success('저장되었습니다! 계산 내역에서 확인하세요.');
+                            if (window.innerWidth >= 768) {
+                                toast.success('저장되었습니다! 계산 내역에서 확인하세요.');
+                            }
                         }}
                         disabled={!isReady}
                     >
@@ -486,12 +496,11 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                 {/* 결과 표시 */}
                 <div className="flex justify-between items-center p-2 md:p-4 px-0 md:px-0 rounded-lg">
                     <h2 className="text-sm md:text-sm">국내 도착가</h2>
-                    <p className="text-lg md:text-xl font-bold">
-                        {result
-                            ? result.toLocaleString('ko-KR', { maximumFractionDigits: 0 })
-                            : '- '}
-                        원
-                    </p>
+                    <animated.p className="text-lg md:text-xl font-bold">
+                        {springResult.number.to(
+                            (val) => `${Math.round(val).toLocaleString('ko-KR')} 원`
+                        )}
+                    </animated.p>
                 </div>
             </div>
         </div>

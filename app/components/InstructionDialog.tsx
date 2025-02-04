@@ -1,6 +1,5 @@
 'use client';
 
-import { Card } from '@/components/ui/card';
 import { HoverCardContent } from '@/components/ui/hover-card';
 import { Shirt, Euro, DollarSign, Package, Percent, Plane, Check } from 'lucide-react';
 
