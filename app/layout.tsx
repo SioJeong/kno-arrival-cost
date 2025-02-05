@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import './globals.css';
 import Header from './components/Header';
 import { Toaster } from '@/components/ui/sonner';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 const suit = localFont({
     src: './fonts/SUIT-Variable.woff2',
@@ -36,6 +37,7 @@ export default function RootLayout({
                 <main className="flex `flex-1 w-full px-4 py-2 md:px-8 md:py-4">{children}</main>
                 <Toaster />
             </body>
+            <GoogleAnalytics gaId="G-B67F2F5XGS" />
         </html>
     );
 }
