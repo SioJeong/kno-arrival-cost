@@ -62,7 +62,7 @@ export default function ResultTable() {
                                     <CircleHelp size={16} className="stroke-card-foreground" />
                                 </div>
                             </HoverCardTrigger>
-                            <HoverCardContent className="w-100">
+                            <HoverCardContent className="w-100 bg-background">
                                 <div className="flex flex-col items-start space-y-2 text-sm text-left">
                                     <p>
                                         입력하신 <strong>SKU 넘버</strong>를 다른 플랫폼에서 가격
@@ -81,113 +81,122 @@ export default function ResultTable() {
                 </TableRow>
             </TableHeader>
             <TableBody className="overflow-auto">
-                {results.map((result: CalculateResult) => (
-                    <TableRow key={result.id}>
-                        <TableCell className="text-center p-0">
-                            <div className="flex items-center justify-center h-full w-full">
-                                <Star
-                                    onClick={() => toggleChecked(result.id)}
-                                    size={20}
-                                    className={`cursor-pointer transition-colors duration-200 ${
-                                        result.checked
-                                            ? 'fill-amber-600 text-amber-600'
-                                            : 'text-card-foreground'
-                                    }`}
-                                />
-                            </div>
-                        </TableCell>
-                        <TableCell className="font-semibold text-center">{result.sku}</TableCell>
-                        <TableCell className="text-center">{result.cost}</TableCell>
-                        <TableCell className="text-center">{result.condition}</TableCell>
-                        <TableCell className="text-center">{result.category}</TableCell>
-                        <TableCell className="text-center">
-                            {result.customDuty ? 'O' : 'X'}
-                        </TableCell>
-                        <TableCell className="text-center font-semibold text-emerald-300">
-                            ₩{result.finalPrice.toLocaleString()}
-                        </TableCell>
-                        <TableCell className="text-center">
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        size="sm"
-                                        className={
-                                            result.memo?.length
-                                                ? 'bg-amber-600 hover:bg-amber-500 border-none'
-                                                : 'btn-primary'
-                                        }
-                                    >
-                                        <SquarePen />
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-80">
-                                    <div className="grid gap-4">
-                                        <div className="grid gap-2">
-                                            <Label htmlFor={`memo-${result.id}`}>Memo</Label>
-                                            <Textarea
-                                                id={`memo-${result.id}`}
-                                                placeholder="메모를 입력하세요."
-                                                value={
-                                                    editingMemo[result.id] !== undefined
-                                                        ? editingMemo[result.id]
-                                                        : result.memo || ''
-                                                }
-                                                onChange={(e) =>
-                                                    setEditingMemo((prev) => ({
-                                                        ...prev,
-                                                        [result.id]: e.target.value,
-                                                    }))
-                                                }
-                                                className="max-h-40"
-                                            />
-                                        </div>
+                {results.map((result: CalculateResult) => {
+                    // 현재 편집 중인 메모 값이 있다면 그 값을, 없으면 기존 result.memo를 사용
+                    const currentMemo =
+                        editingMemo[result.id] !== undefined
+                            ? editingMemo[result.id]
+                            : result.memo || '';
+
+                    return (
+                        <TableRow key={result.id}>
+                            <TableCell className="text-center p-0">
+                                <div className="flex items-center justify-center h-full w-full">
+                                    <Star
+                                        onClick={() => toggleChecked(result.id)}
+                                        size={20}
+                                        className={`cursor-pointer transition-colors duration-200 ${
+                                            result.checked
+                                                ? 'fill-amber-600 text-amber-600'
+                                                : 'text-card-foreground'
+                                        }`}
+                                    />
+                                </div>
+                            </TableCell>
+                            <TableCell className="font-semibold text-center">
+                                {result.sku}
+                            </TableCell>
+                            <TableCell className="text-center">{result.cost}</TableCell>
+                            <TableCell className="text-center">{result.condition}</TableCell>
+                            <TableCell className="text-center">{result.category}</TableCell>
+                            <TableCell className="text-center">
+                                {result.customDuty ? 'O' : 'X'}
+                            </TableCell>
+                            <TableCell className="text-center font-semibold text-emerald-300">
+                                ₩{result.finalPrice.toLocaleString()}
+                            </TableCell>
+                            <TableCell className="text-center">
+                                <Popover>
+                                    <PopoverTrigger asChild>
                                         <Button
-                                            onClick={() => handleMemoSave(result)}
-                                            className="w-full btn-primary"
+                                            variant="outline"
+                                            size="sm"
+                                            className={
+                                                // 현재 memo의 길이가 0이면 기본 스타일(btn-primary) 적용
+                                                currentMemo.length > 0
+                                                    ? 'bg-amber-600 hover:bg-amber-500 border-none'
+                                                    : 'btn-primary'
+                                            }
                                         >
-                                            Save
+                                            <SquarePen />
                                         </Button>
-                                    </div>
-                                </PopoverContent>
-                            </Popover>
-                        </TableCell>
-                        <TableCell className="p-2">
-                            <div className="flex flex-wrap justify-center gap-2 w-full">
-                                <Button size="sm" className="w-full sm:w-14">
-                                    <Link
-                                        href={`https://kream.co.kr/search?keyword=${result.sku}`}
-                                        target="_blank"
-                                        className="w-full"
-                                    >
-                                        Kream
-                                    </Link>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-80 bg-background">
+                                        <div className="grid gap-4">
+                                            <div className="grid gap-2">
+                                                <Label htmlFor={`memo-${result.id}`}>Memo</Label>
+                                                <Textarea
+                                                    id={`memo-${result.id}`}
+                                                    placeholder="메모를 입력하세요."
+                                                    value={currentMemo}
+                                                    onChange={(e) =>
+                                                        setEditingMemo((prev) => ({
+                                                            ...prev,
+                                                            [result.id]: e.target.value,
+                                                        }))
+                                                    }
+                                                    className="max-h-40 bg-muted text-card-foreground border-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus:outline-none"
+                                                    autoComplete="off"
+                                                    spellCheck="false"
+                                                />
+                                            </div>
+                                            <Button
+                                                onClick={() => handleMemoSave(result)}
+                                                className="w-full btn-primary"
+                                            >
+                                                Save
+                                            </Button>
+                                        </div>
+                                    </PopoverContent>
+                                </Popover>
+                            </TableCell>
+                            <TableCell className="p-2">
+                                <div className="flex flex-wrap justify-center gap-2 w-full">
+                                    <Button size="sm" className="w-full sm:w-14">
+                                        <Link
+                                            href={`https://kream.co.kr/search?keyword=${result.sku}`}
+                                            target="_blank"
+                                            className="w-full"
+                                        >
+                                            Kream
+                                        </Link>
+                                    </Button>
+                                    <Button size="sm" className="w-full sm:w-14">
+                                        <Link
+                                            href={`https://www.balaan.co.kr/products?keyword=${result.sku}&page=1&sort=lowPrice&lowest=Y`}
+                                            target="_blank"
+                                            className="w-full"
+                                        >
+                                            발란
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </TableCell>
+                            <TableCell className="text-right">
+                                <Button
+                                    className="bg-red-900 hover:bg-red-800"
+                                    size="sm"
+                                    onClick={() => {
+                                        deleteResult(result.id);
+                                        toast.success('계산 내역이 삭제되었습니다!');
+                                    }}
+                                >
+                                    <Trash2 />
                                 </Button>
-                                <Button size="sm" className="w-full sm:w-14">
-                                    <Link
-                                        href={`https://www.balaan.co.kr/products?keyword=${result.sku}&page=1&sort=lowPrice&lowest=Y`}
-                                        target="_blank"
-                                        className="w-full"
-                                    >
-                                        발란
-                                    </Link>
-                                </Button>
-                            </div>
-                        </TableCell>
-                        <TableCell className="text-right">
-                            <Button
-                                className="bg-red-900 hover:bg-red-800"
-                                size="sm"
-                                onClick={() => {
-                                    deleteResult(result.id);
-                                    toast.success('계산 내역이 삭제되었습니다!');
-                                }}
-                            >
-                                <Trash2 />
-                            </Button>
-                        </TableCell>
-                    </TableRow>
-                ))}
+                            </TableCell>
+                        </TableRow>
+                    );
+                })}
             </TableBody>
         </Table>
     );

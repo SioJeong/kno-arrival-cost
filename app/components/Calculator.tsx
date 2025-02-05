@@ -32,7 +32,8 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
     const addResult = useStore(useCalculatorResultStore, (state) => state.addResult);
 
-    const isReady = sku !== null && cost !== null && condition !== null && category !== null;
+    // sku는 필수가 아니므로 계산 준비 여부는 cost, condition, category만 체크
+    const isReady = cost !== null && condition !== null && category !== null;
 
     const SHIPPING_COST: Record<string, number> = {
         acc: 1.04,
@@ -121,20 +122,25 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
             shoes: 'Shoes',
         };
 
-        // Zustand 스토어에 결과 저장
-        const newResult = {
-            checked: false,
-            id: `${Date.now()}`,
-            sku: sku as string,
-            cost: `${currency} ${(cost ?? 0).toFixed(2)}`,
-            condition: `${conditionTypeMapper[conditionType]}${condition ?? 0}%`,
-            category: `${categoryMapper[category ?? '']}`,
-            customDuty: duties === 'notDutyFree',
-            finalPrice: roundedResult,
-            memo: '',
-        };
+        // sku가 입력되어 있을 때에만 Zustand 스토어에 결과 저장 (히스토리에 추가)
+        if (sku && sku.trim()) {
+            const newResult = {
+                checked: false,
+                id: `${Date.now()}`,
+                sku: sku,
+                cost: `${currency} ${(cost ?? 0).toFixed(2)}`,
+                condition: `${conditionTypeMapper[conditionType]}${condition ?? 0}%`,
+                category: `${categoryMapper[category ?? '']}`,
+                customDuty: duties === 'notDutyFree',
+                finalPrice: roundedResult,
+                memo: '',
+            };
 
-        addResult(newResult);
+            addResult(newResult);
+            if (window.innerWidth >= 768) {
+                toast.success('저장되었습니다! 계산 내역에서 확인하세요.');
+            }
+        }
     };
 
     return (
@@ -214,7 +220,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                     <Label className="text-sm">Condition Type</Label>
                     <div
                         className="
-                            flex items-center
+                            flex items-start
                             justify-between
                             bg-slate-50 
                             p-2
@@ -235,7 +241,10 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         value="costPlus"
                                         id="cost-plus-condition"
                                     />
-                                    <Label htmlFor="cost-plus-condition" className="text-sm w-20">
+                                    <Label
+                                        htmlFor="cost-plus-condition"
+                                        className="text-sm w-28 md:w-20"
+                                    >
                                         COST PRICE +
                                     </Label>
                                 </div>
@@ -248,7 +257,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                     />
                                     <Label
                                         htmlFor="retail-minus-condition"
-                                        className="text-sm w-20"
+                                        className="text-sm w-28 md:w-20"
                                     >
                                         RETAIL PRICE -
                                     </Label>
@@ -260,7 +269,10 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         value="costMinus"
                                         id="cost-minus-condition"
                                     />
-                                    <Label htmlFor="cost-minus-condition" className="text-sm w-20">
+                                    <Label
+                                        htmlFor="cost-minus-condition"
+                                        className="text-sm w-28 md:w-20"
+                                    >
                                         COST PRICE -
                                     </Label>
                                 </div>
@@ -271,7 +283,10 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         value="retailPlus"
                                         id="retail-plus-condition"
                                     />
-                                    <Label htmlFor="retail-plus-condition" className="text-sm w-20">
+                                    <Label
+                                        htmlFor="retail-plus-condition"
+                                        className="text-sm w-28 md:w-20"
+                                    >
                                         RETAIL PRICE +
                                     </Label>
                                 </div>
@@ -417,7 +432,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         id="dutyFree"
                                         className="radio-item"
                                     />
-                                    <Label htmlFor="dutyFree" className="text-sm w-20">
+                                    <Label htmlFor="dutyFree" className="text-sm w-28 md:w-20">
                                         관세 없음
                                     </Label>
                                 </div>
@@ -427,7 +442,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                                         id="notDutyFree"
                                         className="radio-item"
                                     />
-                                    <Label htmlFor="notDutyFree" className="text-sm w-20">
+                                    <Label htmlFor="notDutyFree" className="text-w-28 md:sm w-20">
                                         관세 있음
                                     </Label>
                                 </div>
@@ -483,9 +498,6 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                         className="w-2/5 text-base py-6 mt-4 bg-red-900 hover:bg-red-800"
                         onClick={() => {
                             handleCalculate();
-                            if (window.innerWidth >= 768) {
-                                toast.success('저장되었습니다! 계산 내역에서 확인하세요.');
-                            }
                         }}
                         disabled={!isReady}
                     >

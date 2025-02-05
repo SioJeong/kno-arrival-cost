@@ -58,7 +58,7 @@ body {
     }
 
     .hover-content {
-        background-color: hsl(var(--muted));
+        background-color: hsl(var(--background));
         color: hsl(var(--foreground));
     }
 }
