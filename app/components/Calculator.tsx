@@ -46,7 +46,7 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
 
     const [springResult, api] = useSpring(() => ({
         number: 0,
-        config: { tension: 0, friction: 0, clamp: true },
+        config: { tension: 450, friction: 40, clamp: true },
     }));
 
     const handleCalculate = () => {
@@ -508,7 +508,10 @@ export default function CalculatorApp({ currency, rate }: { currency: string; ra
                 {/* 결과 표시 */}
                 <div className="flex justify-between items-center p-2 md:p-4 px-0 md:px-0 rounded-lg">
                     <h2 className="text-sm md:text-sm">국내 도착가</h2>
-                    <animated.p className="text-lg md:text-xl font-bold">
+                    <animated.p
+                        style={{ fontVariantNumeric: 'tabular-nums' }}
+                        className="text-lg md:text-xl font-bold"
+                    >
                         {springResult.number.to(
                             (val) => `${Math.round(val).toLocaleString('ko-KR')} 원`
                         )}
