@@ -27,14 +27,17 @@ export default function RootLayout({
                 className={`
                     ${suit.variable} 
                     antialiased 
-                    min-h-screen 
+                    h-screen 
                     flex 
                     flex-col
                     bg-background
+                    overflow-hidden
                 `}
             >
                 <Header />
-                <main className="flex `flex-1 w-full px-4 py-2 md:px-8 md:py-4">{children}</main>
+                <main className="flex flex-1 w-full overflow-hidden">
+                    <div className="flex-1 h-full p-4 md:p-8">{children}</div>
+                </main>
                 <Toaster />
             </body>
             <GoogleAnalytics gaId="G-B67F2F5XGS" />
